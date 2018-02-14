@@ -1,13 +1,3 @@
-module.exports = createCssNs;
-module.exports.createCssNs = createCssNs;
-module.exports.createOptions = createOptions;
-module.exports.createReact = createReact;
-module.exports.nsAuto = nsAuto;
-module.exports.nsString = nsString;
-module.exports.nsArray = nsArray;
-module.exports.nsObject = nsObject;
-module.exports.nsReactElement = nsReactElement;
-
 var FILE_BASENAME = /.*[\/\\]([\w-]+).*/;
 
 function isString(x) {
@@ -43,7 +33,7 @@ var assertRegexOption = assertOptionType.bind(null, isRegex, 'RegExp');
 var assertStringOption = assertOptionType.bind(null, isString, 'string');
 var assertObjectOption = assertOptionType.bind(null, isObject, 'object');
 
-function createOptions(raw) {
+export function createOptions(raw) {
   if (raw._cssNsOpts) return raw; // already processed, let's skip any extra work
   if (isString(raw)) return createOptions({ namespace: raw }); // shorthand for just specifying the namespace
   assert(isObject(raw), 'Options must be provided either as an object or a string, got: ' + raw);
@@ -60,7 +50,7 @@ function createOptions(raw) {
   };
 }
 
-function createCssNs(options) {
+export function createCssNs(options) {
   var opt = createOptions(options);
   var ns = nsAuto.bind(null, opt);
   ns.ns = ns; // allows: const { ns, React } = createCssNs(__filename);
@@ -68,7 +58,7 @@ function createCssNs(options) {
   return ns;
 }
 
-function createReact(options, ns) {
+export function createReact(options, ns) {
   var opt = createOptions(options);
   ns = ns || nsAuto.bind(null, opt); // avoid creating another bound version of nsAuto() if our caller already provided one
   assert(opt.React, 'React support must be explicitly enabled by providing the "React" option');
@@ -82,7 +72,7 @@ function createReact(options, ns) {
   });
 }
 
-function nsAuto(options, x) {
+export function nsAuto(options, x) {
   var opt = createOptions(options);
   if (isReactElement(opt, x))
     return nsReactElement(opt, x);
@@ -96,7 +86,7 @@ function nsAuto(options, x) {
     return x;
 }
 
-function nsString(options, string) {
+export function nsString(options, string) {
   assert(isString(string), 'nsString() expects string input, got: ' + string);
   var opt = createOptions(options);
   return string.split(/\s+/).map(function(cls) {
@@ -113,7 +103,7 @@ function nsString(options, string) {
   }).join(' ').trim();
 }
 
-function nsArray(options, array) {
+export function nsArray(options, array) {
   assert(isArray(array), 'nsArray() expects array input, got: ' + array);
   var opt = createOptions(options);
   return array
@@ -122,7 +112,7 @@ function nsArray(options, array) {
     .join(' ');
 }
 
-function nsObject(options, object) {
+export function nsObject(options, object) {
   assert(isObject(object), 'nsObject() expects object input, got: ' + object);
   var opt = createOptions(options);
   return nsArray(opt, Object.keys(object).map(function(key) {
@@ -130,7 +120,7 @@ function nsObject(options, object) {
   }));
 }
 
-function nsReactElement(options, el) {
+export function nsReactElement(options, el) {
   if (isString(el)) return el; // we're mapping a text node -> leave it be
   var opt = createOptions(options);
   assert(isReactElement(opt, el), 'nsReactElement() expects a valid React element, got: ' + el);
