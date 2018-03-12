@@ -2,7 +2,11 @@
   "name": "css-ns",
   "version": "1.2.1",
   "description": "Dead-simple CSS namespaces",
-  "main": "css-ns.js",
+  "source": "css-ns.js",
+  "main": "dist/css-ns.js",
+  "module": "dist/css-ns.es.js",
+  "umd:main": "dist/css-ns.umd.js",
+  "types": "./css-ns.d.ts",
   "engines": {
     "node": ">=7.0.0",
     "npm": ">=3.10.8"
@@ -11,6 +15,7 @@
   "devDependencies": {
     "browserify": "12.0.1",
     "chai": "3.3.0",
+    "microbundle": "^0.4.3",
     "mocha": "2.3.3",
     "react": "0.14.0",
     "react-dom": "0.14.0",
@@ -20,13 +25,20 @@
     "type": "git",
     "url": "https://github.com/jareware/css-ns.git"
   },
+  "files": [
+    "package.json",
+    "css-ns.d.ts",
+    "dist"
+  ],
   "scripts": {
-    "test": "mocha *.spec.js",
+    "build": "microbundle",
+    "prepare": "npm test",
+    "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
+    "test": "npm run build && mocha *.spec.js",
     "test-build": "browserify *.spec.js -v -o test/suite.js",
     "test-selenium": "mocha selenium",
     "deploy-gh-pages": "git stash && npm run test-build && cp -r test temp && git checkout gh-pages && mv temp/* . && rm -rf temp && git commit -am 'Automatic gh-pages deploy' && git push origin gh-pages && git checkout -"
   },
   "author": "Jarno Rantanen <jarno@jrw.fi>",
-  "license": "MIT",
-  "types": "./css-ns.d.ts"
+  "license": "MIT"
 }

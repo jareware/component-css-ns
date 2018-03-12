@@ -1,5 +1,5 @@
 var assert = require('chai').assert; // @see http://chaijs.com/api/assert/
-var cssNs = require('./css-ns');
+var cssNs = require('./dist/css-ns');
 var React = require('react');
 var ReactDOMServer = require('react-dom/server');
 
